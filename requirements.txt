@@ -1,0 +1,5 @@
+pytesseract
+pillow
+img2pdf
+tqdm
+opencv-python
