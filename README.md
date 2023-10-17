@@ -64,9 +64,17 @@ To get started with this project, follow the steps below:
 
 6. Install the required dependencies:
 
-   ```
-   pip install -r requirements.txt
-   ```
+   - For macOS/Linux:
+
+     ```
+     pip3 install -r requirements.txt
+     ```
+
+   - For Windows:
+
+     ```
+     pip install -r requirements.txt
+     ```
 
 7. Run the main script:
 
