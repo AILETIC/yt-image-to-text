@@ -5,7 +5,11 @@ import json
 import img2pdf
 import cv2
 
-def get_pages(
+# -----------------------
+# easy functions
+# -----------------------
+
+def get_pages_easy(
         DIR:str, 
         file_type:str = "JPG"
     ) -> list:
@@ -20,21 +24,7 @@ def get_pages(
     pages = sorted(pages)
     return pages
 
-def get_pages(
-        DIR:str, 
-        file_type:str = "JPG"
-    ) -> list:
-
-    """ returns a list of file paths from a certain directory """
-
-    return sorted([
-        DIR + elem 
-        for elem 
-        in os.listdir(DIR) 
-        if elem[-len(file_type):] == file_type
-    ])
-
-def get_images(
+def get_images_easy(
         pages:list
     ) -> list:
     """ returns a list of ndarray (images, rgb) """
@@ -45,19 +35,7 @@ def get_images(
         images.append(img)
     return images
 
-def get_images(pages:list) -> list:
-
-    """ returns a list of ndarray (images, rgb) """
-
-    return [
-        cv2.cvtColor(
-            cv2.imread(elem), 
-            cv2.COLOR_BGR2RGB
-        ) 
-        for elem in pages
-    ]
-
-def get_text_from_images(
+def get_text_from_images_easy(
         images, 
         language="eng", 
         config="--psm 6"
@@ -82,7 +60,7 @@ def get_text_from_images(
         11    Sparse text. Find as much text as possible in no particular order.
         12    Sparse text with OSD.
         13    Raw line. Treat the image as a single text line, bypassing hacks that are Tesseract-specific.
-    
+        
     """
 
     data = {
@@ -99,6 +77,36 @@ def get_text_from_images(
 
     return data
 
+# --------------------------
+# list / dict comprehensions
+# --------------------------
+
+def get_pages(
+        DIR:str, 
+        file_type:str = "jpg"
+    ) -> list:
+
+    """ returns a list of file paths from a certain directory """
+
+    return sorted([
+        DIR + elem 
+        for elem 
+        in os.listdir(DIR) 
+        if elem[-len(file_type):] == file_type
+    ])
+
+def get_images(
+        pages:list
+    ) -> list:
+    """ returns a list of ndarray (images, rgb) """
+    return [
+        cv2.cvtColor(
+            cv2.imread(elem), 
+            cv2.COLOR_BGR2RGB
+        ) 
+        for elem in pages
+    ]
+
 def get_text_from_images(
         images,
         language="eng",
@@ -106,24 +114,8 @@ def get_text_from_images(
     ) -> dict:
 
     """ 
-        returns a dictonary, containing a list of pages with there respective text
-
-        Page segmentation modes:
-        0    Orientation and script detection (OSD) only.
-        1    Automatic page segmentation with OSD.
-        2    Automatic page segmentation, but no OSD, or OCR. (not implemented)
-        3    Fully automatic page segmentation, but no OSD. (Default)
-        4    Assume a single column of text of variable sizes.
-        5    Assume a single uniform block of vertically aligned text.
-        6    Assume a single uniform block of text.
-        7    Treat the image as a single text line.
-        8    Treat the image as a single word.
-        9    Treat the image as a single word in a circle.
-        10    Treat the image as a single character.
-        11    Sparse text. Find as much text as possible in no particular order.
-        12    Sparse text with OSD.
-        13    Raw line. Treat the image as a single text line, bypassing hacks that are Tesseract-specific.
-        
+        returns a dictonary, containing a list of pages with 
+        there respective text
     """
     return {
         "pages": [
@@ -143,19 +135,21 @@ def save_text(
         type:str ="txt"
     ) -> None:
 
-    """ saves the extracted text either as a whole as text file or as json as dictonary """
+    """ 
+        saves the extracted text either as a whole as 
+        text file or as json as dictonary 
+    """
 
     if type == "txt":
         with open(filename + ".txt", "w") as fp:
             fp.write("".join(data["pages"]))
-    
     elif type == "json":
         with open(filename + ".json", "w") as fp:
             json.dump(data, fp)
-    
     else:
-        print("warning: not the correct file type, choose between 'txt' and 'json'")
-        
+        print("warning: not the correct file type, \
+              choose between 'txt' and 'json'")
+
 def save_pdf(
         images:list,
         filename:str = "output"
@@ -178,11 +172,14 @@ def main():
     images = get_images(pages)
     
     # get text and data from images (data -> dict)
-    data = get_text_from_images(images, language="eng")
+    data = get_text_from_images(
+        images, 
+        language="eng"
+    )
 
     # saves as text and as pdf
     save_text(data, type="txt")
-    save_pdf(images)
+    save_pdf(pages)
 
 if __name__ == "__main__":
     main()
