@@ -76,7 +76,9 @@ To get started with this project, follow the steps below:
      pip install -r requirements.txt
      ```
 
-7. Run the main script:
+7. Run the main or convert script:
+
+main.py:
 
    - For macOS/Linux:
 
@@ -89,6 +91,21 @@ To get started with this project, follow the steps below:
      ```
      python main.py
      ```
+
+convert.py: 
+
+   - For macOS/Linux:
+
+     ```
+     python3 convert.py -f "jpg"
+     ```
+
+   - For Windows:
+
+     ```
+     python convert.py -f "jpg"
+     ```
+
 
 ## Usage
 
